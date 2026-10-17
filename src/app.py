@@ -1,9 +1,10 @@
 from components import components
-from models import detection_model
+from models import logistic_regression, svc, random_forest
 import numpy as np
 import plotly.express as px
 import streamlit as st
 from assets import styles
+from sklearn.inspection import permutation_importance
 
 
 # --------------------------
@@ -15,6 +16,14 @@ ACCENT_GREEN = "#8CC7C4"
 ACCENT_BLUE = "#2C687B"
 DARK_GRAY = "#2C2D2E"
 
+# --------------------------
+# Modelos
+# --------------------------
+MODELS = {
+    "Regressão Logística": logistic_regression,
+    "Support Vector Classifier": svc,
+    "Random Forest": random_forest,
+}
 
 # --------------------------
 # Setup inicial
@@ -29,12 +38,13 @@ def setup_app():
 # --------------------------
 @st.cache_data
 def load_data():
-    return detection_model.load_data()
+    return logistic_regression.load_data()
 
 
 @st.cache_resource
-def load_model(X, y):
-    return detection_model.train_model(X, y)
+def load_model(model_name, X, y):
+    model_module = MODELS[model_name]
+    return model_module.train_model(X, y)
 
 
 # --------------------------
@@ -43,11 +53,22 @@ def load_model(X, y):
 def build_sidebar(dataset, feature_names, feature_labels):
     components.show_sidebar()
 
+    model_options = list(MODELS.keys())
+
+    selected_model_name = st.sidebar.selectbox(
+        "Escolha o modelo de classificação",
+        options=list(MODELS.keys()),
+        index=0,
+        key="modelo_classificacao_v3",
+        filter_mode=None,
+        label_visibility="visible",
+    )
+
     user_input = []
 
     for feature in feature_names:
         components.show_sidebar_card()
-        
+
         value = st.sidebar.slider(
             feature_labels[feature],
             float(dataset[feature].min()),
@@ -57,14 +78,16 @@ def build_sidebar(dataset, feature_names, feature_labels):
         )
         user_input.append(value)
 
-    return np.array(user_input).reshape(1, -1)
+    input_array = np.array(user_input).reshape(1, -1)
+
+    return selected_model_name, input_array
 
 
 # --------------------------
 # Predição
 # --------------------------
-def make_prediction(model, input_array):
-    return detection_model.predict(model, input_array)
+def make_prediction(model, model_module, input_array):
+    return model_module.predict(model, input_array)
 
 
 # --------------------------
@@ -108,44 +131,64 @@ def plot_probability_chart(prob):
         yaxis=dict(tickfont=dict(color=ACCENT_BLUE)),
         yaxis_title_font=dict(color=ACCENT_BLUE),
     )
-    st.plotly_chart(figure, use_container_width=True)
+    st.plotly_chart(figure,  width="stretch")
 
 
 # --------------------------
 # Gráfico de Importância
 # --------------------------
-def plot_relevance_chart(model, feature_names, feature_labels):
+def plot_relevance_chart(model, feature_names, feature_labels, X, y):
     components.show_section_title("📊 Influência das Variáveis")
 
-    coefficients = model.coef_[0]
-    abs_coeff = np.abs(coefficients)
+    if hasattr(model, "coef_"):
+        values = np.asarray(model.coef_)
+        values = values[0] if values.ndim > 1 else values
+        color_values = np.abs(values)
+        x_title = "Impacto no modelo (coeficiente)"
 
-    figure2 = px.bar(
-        x=coefficients,
+    elif hasattr(model, "feature_importances_"):
+        values = model.feature_importances_
+        color_values = values
+        x_title = "Importância da variável"
+
+    else:
+        result = permutation_importance(
+            model,
+            X,
+            y,
+            n_repeats=5,
+            random_state=42,
+            scoring="accuracy",
+        )
+        values = result.importances_mean
+        color_values = np.abs(values)
+        x_title = "Importância por permutação (queda na acurácia)"
+
+    figure = px.bar(
+        x=values,
         y=[feature_labels[f] for f in feature_names],
         orientation="h",
-        color=abs_coeff,
+        color=color_values,
         color_continuous_scale=[
             (0.0, ACCENT_GREEN),
             (0.5, ACCENT_BLUE),
             (1.0, PRIMARY_RED),
-        ]
+        ],
     )
 
-    figure2.update_layout(
+    figure.update_layout(
         coloraxis_showscale=False,
-        xaxis_title="Impacto no modelo",
+        xaxis_title=x_title,
         yaxis_title="",
         plot_bgcolor=LIGHT_BG,
         paper_bgcolor=LIGHT_BG,
         font=dict(color=DARK_GRAY),
-        
         xaxis=dict(tickfont=dict(color=ACCENT_BLUE)),
         yaxis=dict(tickfont=dict(color=ACCENT_BLUE)),
         xaxis_title_font=dict(color=ACCENT_BLUE),
     )
-    st.plotly_chart(figure2, use_container_width=True)
 
+    st.plotly_chart(figure, width="stretch")
 
 # --------------------------
 # MAIN
@@ -154,8 +197,7 @@ def main():
     setup_app()
 
     dataset = load_data()
-    X, y = detection_model.prepare_data(dataset)
-    model = load_model(X, y)
+    X, y = logistic_regression.prepare_data(dataset)
 
     components.show_title_card(
         "Sistema de Predição de Câncer de Mama",
@@ -173,18 +215,29 @@ def main():
         "Normal Nucleoli": "Nucléolos normais",
         "Mitoses": "Taxa de mitoses"
     }
+
     feature_names = dataset.columns[1:-1]
 
-    input_array = build_sidebar(dataset, feature_names, feature_labels)
-    
-    prediction, prob = make_prediction(model, input_array)
+    selected_model_name, input_array = build_sidebar(
+        dataset,
+        feature_names,
+        feature_labels
+    )
+
+    model_module = MODELS[selected_model_name]
+    model = load_model(selected_model_name, X, y)
+
+    prediction, prob = make_prediction(
+        model,
+        model_module,
+        input_array
+    )
 
     show_results(prediction, prob)
     plot_probability_chart(prob)
-    plot_relevance_chart(model, feature_names, feature_labels)
+    plot_relevance_chart(model, feature_names, feature_labels, X, y)
 
     components.show_about_project()
-
 
 # --------------------------
 # ENTRYPOINT

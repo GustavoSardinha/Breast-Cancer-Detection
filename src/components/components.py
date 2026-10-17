@@ -125,7 +125,7 @@ def show_about_project():
                 à tomada de decisão clínica.
             </div>
             <div class="about-credits">
-                <div><b>Feito por:</b> Anderson Luis</div>
+                <div><b>Feito por:</b> Anderson Luis e Gustavo Sardinha</div>
                 <div class="credits-images">
                     <a href="https://github.com/andluis35" target="_blank">
                         <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" width="30">
