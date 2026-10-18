@@ -23,7 +23,19 @@ def load_styles():
             [data-testid="stSidebar"] * {
                 color: white;
             }
-                
+            [data-testid="stSidebar"] [data-baseweb="select"],
+            [data-testid="stSidebar"] [data-baseweb="select"] * {
+                color: #2C2D2E !important;
+                -webkit-text-fill-color: #2C2D2E !important;
+            }
+
+            [data-testid="stSidebar"] [data-baseweb="select"] > div {
+                background-color: #FFF6F6 !important;
+            }
+
+            [data-testid="stSidebar"] [data-baseweb="select"] svg {
+                fill: #2C2D2E !important;
+            }   
             [data-testid="stSidebarHeader"] {
                 margin: 0;
             }
