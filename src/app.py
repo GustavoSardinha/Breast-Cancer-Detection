@@ -1,5 +1,6 @@
 from components import components
-from models import logistic_regression, svc, random_forest
+from models import evaluation
+from models import logistic_regression, random_forest, svc
 import numpy as np
 import plotly.express as px
 import streamlit as st
@@ -236,6 +237,7 @@ def main():
     show_results(prediction, prob)
     plot_probability_chart(prob)
     plot_relevance_chart(model, feature_names, feature_labels, X, y)
+    evaluation.render_evaluation(X, y)
 
     components.show_about_project()
 
