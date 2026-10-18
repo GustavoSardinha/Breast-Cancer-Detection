@@ -191,6 +191,7 @@ def plot_relevance_chart(model, feature_names, feature_labels, X, y):
 
     st.plotly_chart(figure, width="stretch")
 
+
 # --------------------------
 # MAIN
 # --------------------------
@@ -234,12 +235,32 @@ def main():
         input_array
     )
 
-    show_results(prediction, prob)
-    plot_probability_chart(prob)
-    plot_relevance_chart(model, feature_names, feature_labels, X, y)
-    evaluation.render_evaluation(X, y)
+    # Divisão das informações em abas
+    tab_pred, tab_eval, tab_info = st.tabs([
+            "🩺 Resultado da Análise", 
+            "⚖️ Comparativo de Modelos", 
+            "ℹ️ Sobre o Projeto"
+        ])
+    
+    # ABA 1: Resultado clínico
+    with tab_pred:
+        show_results(prediction, prob)
+        st.markdown("<br>", unsafe_allow_html=True)
+            
+        with st.expander("📊 Ver distribuição detalhada de probabilidade", expanded=False):
+            plot_probability_chart(prob)
+                
+        with st.expander("🔬 Entender a influência das variáveis nesta decisão", expanded=False):
+            plot_relevance_chart(model, feature_names, feature_labels, X, y)
+    
+    # ABA 2: Benchmarking
+    with tab_eval:
+        evaluation.render_evaluation(X, y)
+    
+    # ABA 3: Informações e créditos
+    with tab_info:
+        components.show_about_project()
 
-    components.show_about_project()
 
 # --------------------------
 # ENTRYPOINT
