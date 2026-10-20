@@ -58,13 +58,12 @@ def render_evaluation(X, y):
     with st.spinner("Executando validação cruzada (5 folds)..."):
         df_results = perform_benchmarking(X, y)
 
-    st.markdown("Desempenho médio de cada modelo considerando 5 divisões diferentes dos dados (Cross-Validation).")
 
     # Exibe a tabeka destacando os maiores valores por métrica
     st.dataframe(
         df_results.style.highlight_max(
             subset=["Acurácia", "Precisão", "Recall", "F1-Score"], 
-            color="#358538", 
+            color="#46A849", 
             axis=0
         ).format({
             "Acurácia": "{:.2%}", 

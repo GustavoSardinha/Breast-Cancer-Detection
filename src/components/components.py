@@ -116,7 +116,7 @@ def show_about_project():
             <div class="about-title">🧠 Sobre o Projeto</div>
             <div class="about-list">
                 <div><b>Dataset:</b> Wisconsin Breast Cancer (UCI)</div>
-                <div><b>Modelo:</b> Regressão Logística</div>
+                <div><b>Modelos:</b> Regressão Logística | SVC | Random Forest</div>
                 <div><b>Objetivo:</b> Classificação binária (Benigno vs Maligno)</div>
             </div>
             <div class="about-description">
