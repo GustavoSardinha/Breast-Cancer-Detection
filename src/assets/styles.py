@@ -259,6 +259,58 @@ def load_styles():
                 text-align: center;
                 box-shadow: 0 4px 12px rgba(0,0,0,0.12);
             }
+
+            [data-baseweb="tab-list"] {
+                gap: 8px;
+                margin-bottom: 16px;
+            }
+
+            [data-baseweb="tab"] {
+                background-color: rgba(44, 104, 123, 0.1) !important;
+                border-radius: 16px 16px 0px 0px;
+                padding: 12px 24px;
+                color: #2C687B !important; /* ACCENT_BLUE */
+                font-weight: 700;
+                font-size: 16px;
+                border: none !important;
+                transition: all 0.2s ease-in-out;
+            }
+
+            [data-baseweb="tab"][aria-selected="true"] {
+                background-color: #2C687B !important; 
+                color: #FFFFFF !important;
+                box-shadow: 0 -4px 12px rgba(44, 104, 123, 0.2);
+            }
+
+            [data-baseweb="tab"]:hover {
+                background-color: rgba(44, 104, 123, 0.2) !important;
+                color: #2C2D2E !important;
+            }
+
+            [data-testid="stExpander"] {
+                background-color: #FFFFFF;
+                border: 1px solid rgba(44, 104, 123, 0.2);
+                border-radius: 16px;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+                margin-bottom: 16px;
+            }
+
+            [data-testid="stExpander"] summary {
+                color: #2C687B;
+                font-weight: 600;
+                font-size: 16px;
+                padding: 12px 16px;
+                background-color: rgba(44, 104, 123, 0.03);
+                border-radius: 16px;
+            }
+
+            [data-testid="stExpander"] summary:hover {
+                color: #DB1A1A;
+            }
+
+            [data-testid="stExpander"] svg {
+                fill: currentcolor;
+            }
         </style>
         """, 
         unsafe_allow_html=True

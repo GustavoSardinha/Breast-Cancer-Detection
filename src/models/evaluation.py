@@ -64,7 +64,7 @@ def render_evaluation(X, y):
     st.dataframe(
         df_results.style.highlight_max(
             subset=["Acurácia", "Precisão", "Recall", "F1-Score"], 
-            color="#A5D6A7", 
+            color="#358538", 
             axis=0
         ).format({
             "Acurácia": "{:.2%}", 
@@ -88,13 +88,32 @@ def render_evaluation(X, y):
     )
     
     fig.update_layout(
-        plot_bgcolor="#FFF6F6",
-        paper_bgcolor="#FFF6F6",
-        yaxis=dict(range=[0.85, 1.0], title="Pontuação"),
-        xaxis=dict(title=""),
-        legend_title="Modelos",
-        font=dict(color="#2C2D2E"),
-        margin=dict(t=20, b=20)
+        plot_bgcolor="#FFFFFF",
+        paper_bgcolor="#FFFFFF",
+        yaxis=dict(
+            range=[0.85, 1.0], 
+            title=dict(text="Pontuação", 
+            font=dict(color="#2C687B")),
+            tickfont=dict(color="#2C687B", size=12),
+        ),
+
+        xaxis=dict(
+            title="",
+            tickfont=dict(color="#2C687B", size=12),
+        ),
+
+        legend=dict(
+            title=dict(
+                text="Modelos",
+                font=dict(color="#2C687B", size=12)
+            ),
+            font=dict(color="#2C687B", size=12),
+            bgcolor="#FFFFFF",
+            bordercolor="#E0D5D5",
+            borderwidth=1
+        ),
+
+        margin=dict(t=24, b=24, l=48, r=20),
     )
     
     st.plotly_chart(fig, use_container_width=True)

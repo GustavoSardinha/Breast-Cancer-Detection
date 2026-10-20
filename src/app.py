@@ -123,8 +123,8 @@ def plot_probability_chart(prob):
     )
 
     figure.update_layout(
-        plot_bgcolor=LIGHT_BG,
-        paper_bgcolor=LIGHT_BG,
+        plot_bgcolor="#FFFFFF",
+        paper_bgcolor="#FFFFFF",
         font=dict(color=ACCENT_BLUE),
         margin=dict(l=20, r=20, t=40, b=20),
         
@@ -139,8 +139,6 @@ def plot_probability_chart(prob):
 # Gráfico de Importância
 # --------------------------
 def plot_relevance_chart(model, feature_names, feature_labels, X, y):
-    components.show_section_title("📊 Influência das Variáveis")
-
     if hasattr(model, "coef_"):
         values = np.asarray(model.coef_)
         values = values[0] if values.ndim > 1 else values
@@ -181,8 +179,8 @@ def plot_relevance_chart(model, feature_names, feature_labels, X, y):
         coloraxis_showscale=False,
         xaxis_title=x_title,
         yaxis_title="",
-        plot_bgcolor=LIGHT_BG,
-        paper_bgcolor=LIGHT_BG,
+        plot_bgcolor="#FFFFFF",
+        paper_bgcolor="#FFFFFF",
         font=dict(color=DARK_GRAY),
         xaxis=dict(tickfont=dict(color=ACCENT_BLUE)),
         yaxis=dict(tickfont=dict(color=ACCENT_BLUE)),
