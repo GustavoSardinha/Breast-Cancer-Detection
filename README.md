@@ -33,24 +33,27 @@
 
 ```bash
 breast-cancer-detection/
-├─ data/                          # Dataset utilizado no modelo / Dataset used
+├─ data/                              # Dataset utilizado no modelo / Dataset used
 │  └─ breast-cancer.csv
 │
 ├─ src/
 │  ├─ assets/
-│  │   └─ styles.py              # Estilos visuais do app / App styling
+│  │   └─ styles.py                   # Estilos visuais do app / App styling
 │  │
 │  ├─ components/
-│  │   └─ components.py          # Componentes reutilizáveis da interface / Reusable UI components
+│  │   └─ components.py               # Componentes reutilizáveis da interface / Reusable UI components
 │  │
-│  ├─ models/
-│  │   └─ detection_model.py     # Lógica de Machine Learning (treino e predição) / ML logic (training & prediction)
+│  ├─ models/                         # Avaliação e modelos / Benchmarking and models
+│  │   └─ evaluation.py               
+│  │   └─ logistic_regression.py
+│  │   └─ random_forest.py
+│  │   └─ svc.py          
 │  │
-│  └─ app.py                     # Aplicação principal em Streamlit / Main Streamlit app
+│  └─ app.py                          # Aplicação principal em Streamlit / Main Streamlit app
 │
-├─ requirements.txt              # Dependências do projeto / Project dependencies
-├─ .gitignore                    # Arquivos ignorados pelo Git / Ignored files
-└─ README.md                     # Documentação do projeto / Project documentation
+├─ requirements.txt                   # Dependências do projeto / Project dependencies
+├─ .gitignore                         # Arquivos ignorados pelo Git / Ignored files
+└─ README.md                          # Documentação do projeto / Project documentation
 ```
 
 ## ⚙️ Decisões de Design / Design Decisions
